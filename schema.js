@@ -13,17 +13,12 @@ const {
 
 //hardcoded data
 
-const customer = [
-    {id:'1', name:'John Doe', email:'johndoe@gmail.com', age:35},
-    {id:'2', name:'Steve Smith', email:'stevesmith@gmail.com', age:25},
-    {id:'3', name:'Sarah Williams', email:'sarah@gmail.com', age:32}
-]
 
 const CustomerType = new GraphQLObjectType({
     name:'customer',
     fields: () => ({
-        id:{type:GraphQLString},
-        name:{type:GraphQLString},
+        id:{type:GraphQLInt},
+        username:{type:GraphQLString},
         email:{type:GraphQLString},
         age:{type:GraphQLInt}
     })
@@ -51,7 +46,10 @@ const RootQuery = new GraphQLObjectType({
         customers: {
             type: new GraphQLList(CustomerType),
             resolve(parentValue, args) {
-            return customer
+            const query = `SELECT * FROM "user"`
+            return db.conn.many(query)
+            .then(data => data)
+            .catch(err => err)
         }
     }
 }
