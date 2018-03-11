@@ -39,7 +39,13 @@ const RootQuery = new GraphQLObjectType({
         },
         resolve(parentValue,args) {
            const query = `SELECT * FROM "user" WHERE id = ${args.id}`
-            
+           return db.conn.one(query)
+           .then((data) => {
+               return data
+           })
+           .catch((error) => {
+               return error;
+           })
         }
     },
         customers: {
