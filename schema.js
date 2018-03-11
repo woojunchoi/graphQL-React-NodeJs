@@ -1,3 +1,7 @@
+const pgp = require('pg-promise')();
+const db = {}
+db.conn = pgp('postgres://atpboaqi:DFTtbV2mMDfodxiI1tboCkkOoTg26wIP@stampy.db.elephantsql.com:5432/atpboaqi')
+
 const {
     GraphQLObjectType,
     GraphQLString,
@@ -31,14 +35,10 @@ const RootQuery = new GraphQLObjectType({
         customer:{
         type:CustomerType,
         args:{
-            id:{type:GraphQLString}
+            id:{type:GraphQLInt}
         },
         resolve(parentValue,args) {
-            for(let i=0; i<customer.length; i++) {
-                if(customer[i].id === args.id) {
-                    return customer[i]
-                }
-            }
+           const query = `SELECT * FROM "user" WHERE id = ${args.id}`
             
         }
     },
