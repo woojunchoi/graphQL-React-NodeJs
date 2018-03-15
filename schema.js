@@ -1,6 +1,5 @@
-const pgp = require('pg-promise')();
-const db = {}
-db.conn = pgp('postgres://atpboaqi:DFTtbV2mMDfodxiI1tboCkkOoTg26wIP@stampy.db.elephantsql.com:5432/atpboaqi')
+//JSON HOOK UP JUST LIKE MONGO. BUT INSTEAD, I BUILT LOCAL JSON FILE TO SERVE
+const axios = require("axios")
 
 const {
     GraphQLObjectType,
@@ -11,10 +10,6 @@ const {
     GraphQLNonNull
 } = require('graphql')
 
-const data = [
-    {id:'23', firstName:'bill', age:30},
-    {id:'47', firstName:'samantha', age:12}
-]
 
 const UserType = new GraphQLObjectType({
     name:'User',
@@ -32,13 +27,8 @@ const RootQuery = new GraphQLObjectType({
             type:UserType,
             args:{id: {type: GraphQLString}},
             resolve(parentValue,args) {
-                for(let i=0; i<data.length; i++) {
-                    if(data[i].id === args.id) {
-                        console.log(data[i])
-                        return data[i]
-                    }
-                }
-            }
+                return axios.get(`http://localhost:3000/users/${args.id}`)
+                .then(resp => resp.data)            }
         }
     }
 })
@@ -47,6 +37,10 @@ module.exports = new GraphQLSchema({
     query:RootQuery
 })
 
+// with POSTGRESQL
+// const pgp = require('pg-promise')();
+// const db = {}
+// db.conn = pgp('postgres://atpboaqi:DFTtbV2mMDfodxiI1tboCkkOoTg26wIP@stampy.db.elephantsql.com:5432/atpboaqi')
 
 // const CustomerType = new GraphQLObjectType({
 //     name:'customer',
