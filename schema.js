@@ -11,17 +11,41 @@ const {
     GraphQLNonNull
 } = require('graphql')
 
+const data = [
+    {id:'23', firstName:'bill', age:30},
+    {id:'47', firstName:'samantha', age:12}
+]
+
 const UserType = new GraphQLObjectType({
     name:'User',
-    field: () => ({
+    fields: () => ({
         id:{type:GraphQLString},
-        firstname:{type:GraphQLString},
+        firstName:{type:GraphQLString},
         age:{type:GraphQLInt}
     })
 })
 
+const RootQuery = new GraphQLObjectType({
+    name:'RootQueryType',
+    fields: {
+        user:{
+            type:UserType,
+            args:{id: {type: GraphQLString}},
+            resolve(parentValue,args) {
+                for(let i=0; i<data.length; i++) {
+                    if(data[i].id === args.id) {
+                        console.log(data[i])
+                        return data[i]
+                    }
+                }
+            }
+        }
+    }
+})
 
-
+module.exports = new GraphQLSchema({
+    query:RootQuery
+})
 
 
 // const CustomerType = new GraphQLObjectType({
